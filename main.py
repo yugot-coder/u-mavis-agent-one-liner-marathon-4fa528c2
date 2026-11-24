@@ -18,6 +18,23 @@ def main() -> None:
     with open("/output/entry.txt", "w", encoding="utf-8", newline="\n") as f:
         f.write(JOKE + "\n")
 
+    # Read back what was written and validate the competition gates:
+    # valid UTF-8, exactly one line, 1-280 chars, not whitespace-only.
+    with open("/output/entry.txt", "r", encoding="utf-8") as f:
+        text = f.read()
+    lines = text.split("\n")
+    if not (len(lines) == 2 and lines[1] == ""):
+        raise SystemExit("validation failed: entry.txt must be exactly one line")
+    body = lines[0]
+    if not (1 <= len(body) <= 280):
+        raise SystemExit(
+            f"validation failed: entry length {len(body)} outside 1-280 chars"
+        )
+    if not body.strip():
+        raise SystemExit("validation failed: entry must not be whitespace-only")
+    if body != JOKE:
+        raise SystemExit("validation failed: entry.txt does not match JOKE")
+
 
 if __name__ == "__main__":
     main()
